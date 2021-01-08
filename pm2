@@ -1,0 +1,36 @@
+module.exports = {
+    apps: [{
+        name: 'back',
+        script: 'npm',
+        args: "run start",
+        // script: './kolbasaBack/server.js',
+        cwd: './back',
+        env: {
+            "PORT": "1337",
+            "NODE_ENV": "production",
+            "DATABASE_HOST": "localhost",
+            "DATABASE_PORT": 27017,
+            "DATABASE_NAME": "back",
+            "DATABASE_USERNAME": "",
+            "DATABASE_PASSWORD": "",
+            "SMTP_HOST": "smtp.yandex.ru",
+            "SMTP_PORT": "465",
+            "SMTP_USERNAME": "noreply@bestadforyou.com",
+            "SMTP_PASSWORD": "fuckoff11",
+            "MAIL_TO": "inoisy@bk.ru"
+        }
+    },
+    {
+        name: 'front',
+        script: 'npm',
+        args: "run start",
+        cwd: './front', // only if using a subdirectory
+        env: {
+            "HOST": "0.0.0.0",
+            "PORT": "8080",
+            "NODE_ENV": "production",
+            "BASE_URL": "https://api.bestadforyou.com",
+        }
+    }
+    ]
+};
