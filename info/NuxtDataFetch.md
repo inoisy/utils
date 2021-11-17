@@ -46,6 +46,9 @@ async fetch() {
 
  https://nuxtjs.org/tutorials/build-dev-to-clone-with-nuxt-new-fetch/
 
+
+ https://fadamakis.medium.com/nuxt-patterns-you-will-love-as-a-vue-js-developer-part-2-34a6500c9fac
+
  ## asyncData 
  ```
     data(){
