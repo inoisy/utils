@@ -1,0 +1,87 @@
+  hooks: {
+    generate: {
+      async done(generator) {
+        const { distPath } = generator;
+        console.log('🚀 ~ file: nuxt.config.js ~ line 22 ~ done ~ distPath', distPath);
+        const readedPath = await fs.readdirSync(distPath);
+        console.log('🚀 ~ file: nuxt.config.js ~ line 26 ~ done ~ readedPath', readedPath);
+        // console.log('🚀 ~ file: nuxt.config.js ~ line 21 ~ done ~ ctx', ctx);
+      },
+    },
+  },
+  
+  
+  
+  
+  
+  const fs = require('fs');
+const path = require('path');
+const archiver = require('archiver');
+const OUTPUT_PATH = 'output';
+
+async function main() {
+  const pathCurrent = path.join(__dirname, OUTPUT_PATH);
+  // console.log('🚀 ~ file: archive.js ~ line 8 ~ main ~ pathCurrent', pathCurrent);
+  const isOutputPathExist = await fs.existsSync(pathCurrent);
+  // console.log('🚀 ~ file: archive.js ~ line 10 ~ main ~ isOutputPathExist', isOutputPathExist);
+  if (!isOutputPathExist) {
+    // console.log('🚀 ~ file: archive.js ~ line 12 ~ main ~ !isOutputPathExist', isOutputPathExist);
+    try {
+      await fs.mkdirSync(pathCurrent);
+    } catch (error) {
+      console.log('🚀 ~ file: archive.js ~ line 14 ~ main ~ error', error);
+      return;
+    }
+  }
+  // require modules
+  // const fs = require('fs');
+  // const archiver = require('archiver');
+  const pathCurr = path.join(pathCurrent, '/dist.zip');
+  // console.log('🚀 ~ file: archive.js ~ line 10 ~ main ~ pathCurr', pathCurr);
+  // create a file to stream archive data to.
+  const output = fs.createWriteStream(pathCurr);// __dirname +
+  const archive = archiver('zip', {
+    zlib: { level: 9 }, // Sets the compression level.
+  });
+
+  // listen for all archive data to be written
+  // 'close' event is fired only when a file descriptor is involved
+  output.on('close', function() {
+    console.log(archive.pointer() + ' total bytes');
+    console.log('archiver has been finalized and the output file descriptor has closed.');
+  });
+
+  // This event is fired when the data source is drained no matter what was the data source.
+  // It is not part of this library but rather from the NodeJS Stream API.
+  // @see: https://nodejs.org/api/stream.html#stream_event_end
+  output.on('end', function() {
+    console.log('Data has been drained');
+  });
+
+  // good practice to catch warnings (ie stat failures and other non-blocking errors)
+  archive.on('warning', function(err) {
+    console.log('🚀 ~ file: archive.js ~ line 33 ~ archive.on ~ err', err);
+    if (err.code === 'ENOENT') {
+    // log warning
+    } else {
+    // throw error
+      throw err;
+    }
+  });
+
+  // good practice to catch this error explicitly
+  archive.on('error', function(err) {
+    console.log('🚀 ~ file: archive.js ~ line 45 ~ archive.on ~ err', err);
+
+    throw err;
+  });
+
+  // pipe archive data to the file
+  archive.pipe(output);
+  archive.directory('dist/', false);
+  archive.finalize();
+}
+main();
+
+
+"archiver": "^5.3.0",
